@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    canvas {
+      touch-action: none;
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="drawCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('drawCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let drawing = false;
+
+    canvas.addEventListener('touchstart', (e) => {
+      drawing = true;
+      ctx.beginPath();
+      const touch = e.touches[0];
+      ctx.moveTo(touch.clientX, touch.clientY);
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!drawing) return;
+      const touch = e.touches[0];
+      ctx.lineTo(touch.clientX, touch.clientY);
+      ctx.stroke();
+    });
+
+    canvas.addEventListener('touchend', () => {
+      drawing = false;
+    });
+
+    // Clear canvas function
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Listen for Thunkable postMessage to clear canvas
+    window.addEventListener('message', (e) => {
+      if (e.data === "clear") clearCanvas();
+    });
+  </script>
+</body>
+</html>
