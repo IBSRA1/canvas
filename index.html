@@ -24,15 +24,14 @@
     canvas.height = window.innerHeight;
 
     let drawing = false;
-    let penColor = "#000000"; // Default black
-    let bgColor = "#FFFFFF"; // Default white
+    let penColor = "#000000";
+    let bgColor = "#FFFFFF";
 
     function fillBackground() {
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Fill initial background
     fillBackground();
 
     canvas.addEventListener("touchstart", function (e) {
@@ -56,20 +55,24 @@
       drawing = false;
     });
 
-    // Listen to messages from Thunkable Web Viewer
+    // ✅ Enable communication from any origin
     window.addEventListener("message", function (e) {
       const msg = e.data;
+      console.log("Got message:", msg);
 
       if (msg.startsWith("pen:")) {
-        penColor = msg.slice(4); // Example: pen:#4A90E2
+        penColor = msg.slice(4);
+        console.log("Pen color changed to", penColor);
       } else if (msg.startsWith("bg:")) {
-        bgColor = msg.slice(3); // Example: bg:#7ED321
+        bgColor = msg.slice(3);
+        console.log("Background changed to", bgColor);
         fillBackground();
       } else if (msg === "clear") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         fillBackground();
+        console.log("Canvas cleared");
       }
-    });
+    }, false);
   </script>
 </body>
 </html>
